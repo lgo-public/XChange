@@ -1,5 +1,7 @@
 package org.knowm.xchange.lgo.service;
 
+import java.util.Arrays;
+import java.util.List;
 import org.knowm.xchange.ExchangeSpecification;
 import org.knowm.xchange.exceptions.ExchangeException;
 import org.knowm.xchange.lgo.Lgo;
@@ -41,7 +43,7 @@ public interface LgoSignatureService extends ParamsDigest {
   }
 
   default boolean needsBodySignature(RestInvocation restInvocation) {
-    return restInvocation.getPath().equals("/v1/live/orders")
+    return NEEDS_BODY_SIGNATURE.contains(restInvocation.getPath())
         && restInvocation.getHttpMethod().equals(HttpMethod.POST.name());
   }
 
@@ -50,4 +52,6 @@ public interface LgoSignatureService extends ParamsDigest {
   String digestSignedUrlAndBodyHeader(String urlToSign, String timestamp, String body);
 
   LgoOrderSignature signOrder(String encryptedOrder);
+
+  List<String> NEEDS_BODY_SIGNATURE = Arrays.asList("/v1/live/orders", "/withdrawals");
 }
