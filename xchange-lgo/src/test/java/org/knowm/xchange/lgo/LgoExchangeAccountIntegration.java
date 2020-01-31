@@ -8,15 +8,15 @@ import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import org.apache.commons.io.IOUtils;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.knowm.xchange.ExchangeFactory;
 import org.knowm.xchange.ExchangeSpecification;
 import org.knowm.xchange.currency.Currency;
 import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.dto.account.Fee;
+import org.knowm.xchange.dto.account.FundingRecord;
+import org.knowm.xchange.lgo.service.LgoAccountService;
 
-@Ignore
 public class LgoExchangeAccountIntegration {
 
   @Test
@@ -41,8 +41,19 @@ public class LgoExchangeAccountIntegration {
     System.out.println(id);
   }
 
+  @Test
+  public void getOperation() throws IOException {
+    LgoExchange lgoExchange = exchangeWithCredentials();
+
+    FundingRecord result = ((LgoAccountService) lgoExchange.getAccountService())
+        .getOperation("ae21f25b-dcdd-4bac-b475-1d45c64e17a8");
+
+    System.out.println(result);
+  }
+
   private LgoExchange exchangeWithCredentials() throws IOException {
     ExchangeSpecification spec = LgoEnv.local();
+    spec.setShouldLoadRemoteMetaData(false);
     spec.setSecretKey(readResource("/integration/private_key.pem"));
     spec.setApiKey(readResource("/integration/api_key.txt"));
 

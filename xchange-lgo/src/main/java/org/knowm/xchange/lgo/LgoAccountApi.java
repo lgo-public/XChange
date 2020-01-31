@@ -6,10 +6,12 @@ import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import org.knowm.xchange.lgo.dto.LgoException;
 import org.knowm.xchange.lgo.dto.account.LgoAccountDetails;
+import org.knowm.xchange.lgo.dto.account.LgoOperation;
 import org.knowm.xchange.lgo.dto.account.LgoWithdrawalRequest;
 import org.knowm.xchange.lgo.dto.account.LgoWithdrawalResponse;
 import si.mazi.rescu.ParamsDigest;
@@ -24,10 +26,8 @@ public interface LgoAccountApi {
   @GET
   @Path("/me")
   LgoAccountDetails getAccountDetails(
-      @HeaderParam(X_LGO_DATE) long timestamp,
-      @HeaderParam(AUTHORIZATION) ParamsDigest signature)
+      @HeaderParam(X_LGO_DATE) long timestamp, @HeaderParam(AUTHORIZATION) ParamsDigest signature)
       throws IOException, LgoException;
-
 
   @POST
   @Path("/withdrawals")
@@ -37,5 +37,15 @@ public interface LgoAccountApi {
       LgoWithdrawalRequest withdrawalRequest,
       @HeaderParam(X_LGO_DATE) long timestamp,
       @HeaderParam(AUTHORIZATION) ParamsDigest signature)
+      throws IOException, LgoException;
+
+  @GET
+  @Path("/operations/{id}")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  LgoOperation getOperation(
+      @HeaderParam(X_LGO_DATE) long timestamp,
+      @HeaderParam(AUTHORIZATION) ParamsDigest signature,
+      @PathParam("id") String operationId)
       throws IOException, LgoException;
 }

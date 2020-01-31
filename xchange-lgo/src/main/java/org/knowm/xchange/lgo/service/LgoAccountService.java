@@ -7,8 +7,11 @@ import java.util.Map;
 import org.knowm.xchange.currency.Currency;
 import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.dto.account.Fee;
+import org.knowm.xchange.dto.account.FundingRecord;
+import org.knowm.xchange.lgo.LgoAdapters;
 import org.knowm.xchange.lgo.LgoExchange;
 import org.knowm.xchange.lgo.dto.account.LgoFeeRates;
+import org.knowm.xchange.lgo.dto.account.LgoOperation;
 import org.knowm.xchange.lgo.dto.account.LgoWithdrawalRequest;
 import org.knowm.xchange.lgo.dto.account.LgoWithdrawalResponse;
 import org.knowm.xchange.service.account.AccountService;
@@ -36,5 +39,10 @@ public class LgoAccountService extends LgoAccountServiceRaw implements AccountSe
         currency.getCurrencyCode());
     LgoWithdrawalResponse result = this.requestWithdrawal(request);
     return result.getId().toString();
+  }
+
+  public FundingRecord getOperation(String id) throws IOException {
+    LgoOperation lgoOperation = getLgoOperation(id);
+    return LgoAdapters.adaptOperation(lgoOperation);
   }
 }
